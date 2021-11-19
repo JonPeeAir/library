@@ -10,24 +10,28 @@
 </head>
 <body>
     <h1>Library</h1>
-    <form>
-        <div>
-            <label for="title">Title of the book</label><br>
-            <input type="text" id="title" name="title" required>
-        </div>
+    <button class="book-modal-button" id="book-modal-button">+</button>
+    <div class="book-modal" id="book-modal">
+        <form>
+            <div>
+                <label for="title">Title of the book</label><br>
+                <input type="text" id="title" name="title" required>
+            </div>
 
-        <div>
-            <label for="author">Author</label><br>
-            <input type="text" id="author" name="author" required>
-        </div>
+            <div>
+                <label for="author">Author</label><br>
+                <input type="text" id="author" name="author" required>
+            </div>
 
-        <div>
-            <label for="pages">No. of pages</label><br>
-            <input type="number" id="pages" name="pages" required>
-        </div>
-        
-        <button id="new-book" type="submit">new book</button>
-    </form>
+            <div>
+                <label for="pages">No. of pages</label><br>
+                <input type="number" id="pages" name="pages" required>
+            </div>
+            
+            <button id="new-book" type="submit">new book</button>
+        </form>
+    </div>
+    <div class="modal-overlay" id="modal-overlay"></div>
     
 </body>
 </html>
