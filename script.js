@@ -1,19 +1,15 @@
+const bookModalButton = document.getElementById("book-modal-button");
+const bookModal = document.getElementById("book-modal");
 const form = document.querySelector("form");
-form.onsubmit = addBookToLibrary;
-
 const titleInput = document.getElementById("title");
 const authorInput = document.getElementById("author");
 const pagesInput = document.getElementById("pages");
-
 const newBookButton = document.getElementById("new-book");
-
-const bookModal = document.getElementById("book-modal");
 const bookModalOverlay = document.getElementById("modal-overlay");
 
-const bookModalButton = document.getElementById("book-modal-button");
-bookModalButton.onclick = openBookModal;
-
+bookModalButton.addEventListener("click", openBookModal);
 bookModalOverlay.addEventListener("click", closeBookModal);
+form.onsubmit = addBookToLibrary;
 
 let myLibrary = [];
 
@@ -25,9 +21,14 @@ function Book(title, author, pages){
 
 function addBookToLibrary() {
     alert(`Title: ${titleInput.value}, Author: ${authorInput.value}, Pages: ${pagesInput.value}`);
+
+    
+
     titleInput.value = "";
     authorInput.value = "";
     pagesInput.value = "";
+
+    // This makes it so that the form doesn't actually submit the data
     return false;
 }
 
