@@ -4,6 +4,13 @@
     padding: 0;
 }
 
+.book-modal-button {
+    border-radius: 10px;
+    font-size: 2.25rem;
+    height: 50px;
+    width: 50px;
+}
+
 .book-modal{
     position: fixed;
     top: 50%;
