@@ -20,7 +20,16 @@ function Book(title, author, pages){
     this.pages = pages;
 }
 
-refreshBooks();
+function openBookModal() {
+    bookModal.classList.add("active");
+    bookModalOverlay.classList.add("active");
+}
+
+function closeBookModal() {
+    bookModal.classList.remove("active");
+    bookModalOverlay.classList.remove("active");
+}
+
 
 function addBookToLibrary() {
     let newBook = new Book(titleInput.value, authorInput.value, pagesInput.value);
@@ -39,28 +48,28 @@ function addBookToLibrary() {
     return false;
 }
 
-function openBookModal() {
-    bookModal.classList.add("active");
-    bookModalOverlay.classList.add("active");
-}
 
-function closeBookModal() {
-    bookModal.classList.remove("active");
-    bookModalOverlay.classList.remove("active");
-}
-
-// This function is pretty inefficient
-// gonna change it soon
+// This function is pretty inefficient. Imma change it soon
 function refreshBooks() {  
+    removeBooksFrom(library);
+    populateLibraryWithBooksFromLocalStorage();
+}
 
-    // removes all books from library display
+function removeBooksFrom(library) {
     while (library.firstChild) {
         library.removeChild(library.firstChild);
     }
+}
 
-    // re-adds all books into library display including new ones
+function populateLibraryWithBooksFromLocalStorage() {
     for (let i = 0; i < localStorage.length; i++) {
-        let book = JSON.parse(localStorage.getItem(localStorage.key(i)));
+        let bookJSON = localStorage.getItem(localStorage.key(i));
+        let book = JSON.parse(bookJSON);
+        displayBookInLIbrary(book);
+    }
+}
+
+function displayBookInLIbrary(book) {
         let bookDiv = document.createElement("div");
 
         let bookTitle = document.createElement("p");
@@ -75,5 +84,6 @@ function refreshBooks() {
         bookDiv.append(bookPages);
 
         library.append(bookDiv);
-    }
 }
+
+refreshBooks();
