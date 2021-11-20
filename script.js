@@ -1,3 +1,4 @@
+const library = document.getElementById("library");
 const bookModalButton = document.getElementById("book-modal-button");
 const bookModal = document.getElementById("book-modal");
 const form = document.querySelector("form");
@@ -11,7 +12,7 @@ bookModalButton.addEventListener("click", openBookModal);
 bookModalOverlay.addEventListener("click", closeBookModal);
 form.onsubmit = addBookToLibrary;
 
-let myLibrary = [];
+let newBookIndex = localStorage.length;
 
 function Book(title, author, pages){
     this.title = title;
@@ -19,15 +20,19 @@ function Book(title, author, pages){
     this.pages = pages;
 }
 
+refreshBooks();
+
 function addBookToLibrary() {
-    alert(`Title: ${titleInput.value}, Author: ${authorInput.value}, Pages: ${pagesInput.value}`);
     let newBook = new Book(titleInput.value, authorInput.value, pagesInput.value);
 
-
+    localStorage.setItem(newBookIndex, JSON.stringify(newBook));
+    newBookIndex++;
 
     titleInput.value = "";
     authorInput.value = "";
     pagesInput.value = "";
+
+    refreshBooks();
     closeBookModal();
 
     // This makes it so that the form doesn't actually submit the data
@@ -44,38 +49,31 @@ function closeBookModal() {
     bookModalOverlay.classList.remove("active");
 }
 
+// This function is pretty inefficient
+// gonna change it soon
+function refreshBooks() {  
 
-function storageAvailable(type) {
-    var storage;
-    try {
-        storage = window[type];
-        var x = '__storage_test__';
-        storage.setItem(x, x);
-        storage.removeItem(x);
-        return true;
+    // removes all books from library display
+    while (library.firstChild) {
+        library.removeChild(library.firstChild);
     }
-    catch(e) {
-        return e instanceof DOMException && (
-            // everything except Firefox
-            e.code === 22 ||
-            // Firefox
-            e.code === 1014 ||
-            // test name field too, because code might not be present
-            // everything except Firefox
-            e.name === 'QuotaExceededError' ||
-            // Firefox
-            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
-            // acknowledge QuotaExceededError only if there's something already stored
-            (storage && storage.length !== 0);
+
+    // re-adds all books into library display including new ones
+    for (let i = 0; i < localStorage.length; i++) {
+        let book = JSON.parse(localStorage.getItem(localStorage.key(i)));
+        let bookDiv = document.createElement("div");
+
+        let bookTitle = document.createElement("p");
+        bookTitle.textContent = book.title; 
+        let bookAuthor = document.createElement("p");
+        bookAuthor.textContent = book.author;
+        let bookPages = document.createElement("p");
+        bookPages.textContent = book.pages;
+
+        bookDiv.append(bookTitle);
+        bookDiv.append(bookAuthor);
+        bookDiv.append(bookPages);
+
+        library.append(bookDiv);
     }
 }
-
-if (storageAvailable('localStorage')) {
-    // Yippee! We can use localStorage awesomeness
-    alert("yes");
-  }
-  else {
-    // Too bad, no localStorage for us
-    alert("no");
-  }
-
