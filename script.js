@@ -1,5 +1,4 @@
 const library = document.getElementById("library");
-const bookModalButton = document.getElementById("book-modal-button");
 const bookModal = document.getElementById("book-modal");
 const form = document.querySelector("form");
 const titleInput = document.getElementById("title");
@@ -7,7 +6,10 @@ const authorInput = document.getElementById("author");
 const pagesInput = document.getElementById("pages");
 const newBookButton = document.getElementById("new-book");
 const bookModalOverlay = document.getElementById("modal-overlay");
+const bookModalButton = document.getElementById("book-modal-button");
+const clearStorageButton = document.getElementById("clear-storage-button");
 
+clearStorageButton.addEventListener("click", clearLibraryStorage);
 bookModalButton.addEventListener("click", openBookModal);
 bookModalOverlay.addEventListener("click", closeBookModal);
 form.onsubmit = addBookToLibrary;
@@ -84,6 +86,11 @@ function displayBookInLIbrary(book) {
         bookDiv.append(bookPages);
 
         library.append(bookDiv);
+}
+
+function clearLibraryStorage() {
+    localStorage.clear();
+    refreshBooks();
 }
 
 refreshBooks();
