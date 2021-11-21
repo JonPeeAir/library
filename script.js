@@ -72,20 +72,22 @@ function populateLibraryWithBooksFromLocalStorage() {
 }
 
 function displayBookInLIbrary(book) {
-        let bookDiv = document.createElement("div");
+    // TODO: write a function that creates a book card with full functionality
 
-        let bookTitle = document.createElement("p");
-        bookTitle.textContent = book.title; 
-        let bookAuthor = document.createElement("p");
-        bookAuthor.textContent = book.author;
-        let bookPages = document.createElement("p");
-        bookPages.textContent = book.pages;
+    let bookDiv = document.createElement("div");
 
-        bookDiv.append(bookTitle);
-        bookDiv.append(bookAuthor);
-        bookDiv.append(bookPages);
+    let bookTitle = document.createElement("p");
+    bookTitle.textContent = book.title; 
+    let bookAuthor = document.createElement("p");
+    bookAuthor.textContent = book.author;
+    let bookPages = document.createElement("p");
+    bookPages.textContent = book.pages;
 
-        library.append(bookDiv);
+    bookDiv.append(bookTitle);
+    bookDiv.append(bookAuthor);
+    bookDiv.append(bookPages);
+
+    library.append(bookDiv);
 }
 
 function clearLibraryStorage() {
