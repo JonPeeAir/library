@@ -6,8 +6,8 @@ const authorInput = document.getElementById("author");
 const pagesInput = document.getElementById("pages");
 const newBookButton = document.getElementById("new-book");
 const bookModalOverlay = document.getElementById("modal-overlay");
-const bookModalButton = document.getElementById("book-modal-button");
-const clearStorageButton = document.getElementById("clear-storage-button");
+const bookModalButton = document.getElementById("book-modal-btn");
+const clearStorageButton = document.getElementById("clear-storage-btn");
 
 clearStorageButton.addEventListener("click", clearLibraryStorage);
 bookModalButton.addEventListener("click", openBookModal);
@@ -20,6 +20,9 @@ function Book(title, author, pages){
     this.title = title;
     this.author = author;
     this.pages = pages;
+    this.read = true;
+    this.key = newBookIndex;
+    newBookIndex++;
 }
 
 function openBookModal() {
@@ -36,8 +39,7 @@ function closeBookModal() {
 function addBookToLibrary() {
     let newBook = new Book(titleInput.value, authorInput.value, pagesInput.value);
 
-    localStorage.setItem(newBookIndex, JSON.stringify(newBook));
-    newBookIndex++;
+    localStorage.setItem(newBook.key, JSON.stringify(newBook));
 
     titleInput.value = "";
     authorInput.value = "";
@@ -65,7 +67,7 @@ function removeBooksFrom(library) {
 
 function populateLibraryWithBooksFromLocalStorage() {
     for (let i = 0; i < localStorage.length; i++) {
-        let bookJSON = localStorage.getItem(localStorage.key(i));
+        let bookJSON = localStorage.getItem(i);
         let book = JSON.parse(bookJSON);
         displayBookInLIbrary(book);
     }
@@ -83,15 +85,47 @@ function displayBookInLIbrary(book) {
     let bookPages = document.createElement("p");
     bookPages.textContent = book.pages;
 
+    // creating a read toggle switch
+    let readToggle = document.createElement("label");
+    readToggle.classList.add("switch");
+
+    let readCheckbox = document.createElement("input");
+    readCheckbox.type = "checkbox";
+    readCheckbox.checked = book.read;
+    readCheckbox.dataset.key = book.key;
+    readCheckbox.addEventListener("change", () => {
+        if (readCheckbox.checked) {
+            console.log("this is checked");
+            let bookJSON = localStorage.getItem(readCheckbox.dataset.key);
+            let book = JSON.parse(bookJSON);
+            book.read = true;
+            localStorage.setItem(readCheckbox.dataset.key, JSON.stringify(book));
+        } else {
+            console.log("this is not checked");
+            let bookJSON = localStorage.getItem(readCheckbox.dataset.key);
+            let book = JSON.parse(bookJSON);
+            book.read = false;
+            localStorage.setItem(readCheckbox.dataset.key, JSON.stringify(book));
+        }
+
+    });
+    let readUI = document.createElement("span");
+    readUI.classList.add("slider", "round");
+
+    readToggle.append(readCheckbox);
+    readToggle.append(readUI);
+
     bookDiv.append(bookTitle);
     bookDiv.append(bookAuthor);
     bookDiv.append(bookPages);
+    bookDiv.append(readToggle);
 
     library.append(bookDiv);
 }
 
 function clearLibraryStorage() {
     localStorage.clear();
+    newBookIndex = 0;
     refreshBooks();
 }
 
