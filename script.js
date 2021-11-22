@@ -66,15 +66,22 @@ function removeBooksFrom(library) {
 }
 
 function populateLibraryWithBooksFromLocalStorage() {
-    for (let i = 0; i < localStorage.length; i++) {
-        let bookJSON = localStorage.getItem(i);
+    let booksToDisplay = localStorage.length;
+    let index = 0;
+    while (booksToDisplay) {
+        if (!localStorage.getItem(index)) {
+            index++;
+            continue;
+        }
+        let bookJSON = localStorage.getItem(index);
         let book = JSON.parse(bookJSON);
         displayBookInLIbrary(book);
+        index++;
+        booksToDisplay--;
     }
 }
 
 function displayBookInLIbrary(book) {
-    // TODO: write a function that creates a book card with full functionality
 
     let bookDiv = document.createElement("div");
 
@@ -115,10 +122,24 @@ function displayBookInLIbrary(book) {
     readToggle.append(readCheckbox);
     readToggle.append(readUI);
 
+    // creating a remove button
+    let removeButton = document.createElement("button");
+    removeButton.textContent = "REMOVE";
+    removeButton.dataset.key = book.key;
+    removeButton.onclick = () => {
+        localStorage.removeItem(removeButton.dataset.key);
+        if (localStorage.length === 0) {
+            newBookIndex = 0;
+        }
+        refreshBooks();
+    }
+
+
     bookDiv.append(bookTitle);
     bookDiv.append(bookAuthor);
     bookDiv.append(bookPages);
     bookDiv.append(readToggle);
+    bookDiv.append(removeButton);
 
     library.append(bookDiv);
 }
