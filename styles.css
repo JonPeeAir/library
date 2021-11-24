@@ -91,16 +91,20 @@ body {
     font-weight: 400;
     position: absolute;
     left: -120px;
-    bottom: 10px;
+    bottom: -100px;
     background-color: #353535;
     border-radius: 5px;
     padding: 5px 20px;
-    display: none;
+    opacity: 0;
+    transition: opacity 250ms;
+    transition-delay: 1s;
     
+
 }
 
 .book-modal-btn:hover::before{
-    display: inline;
+    bottom: 10px;
+    opacity: 1;
 }
 
 .book-modal{
