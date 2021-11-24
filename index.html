@@ -12,7 +12,8 @@
     <h1 class="title">Library</h1>
     <div class="library" id="library"></div>
     <div class="book-modal" id="book-modal">
-        <form>
+        <div class="book-modal-heading">New Book</div>
+        <form autocomplete="off">
             <div>
                 <label for="title">Title of the book</label><br>
                 <input type="text" id="title" name="title" required>
@@ -28,14 +29,14 @@
                 <input type="number" id="pages" name="pages" required>
             </div>
             
-            <button id="new-book" type="submit">new book</button>
+            <button class="blue-btn" id="new-book" type="submit">new book</button>
         </form>
     </div>
     <div class="modal-overlay" id="modal-overlay"></div>
 
     <div class="fab-container">
         <button class="clear-storage-btn" id="clear-storage-btn">Delete Records</button>
-        <button class="book-modal-btn" id="book-modal-btn">+</button>
+        <button class="book-modal-btn blue-btn" id="book-modal-btn">+</button>
     </div>
     
 </body>

@@ -64,17 +64,20 @@ body {
     color: red;
 }
 
-.book-modal-btn {
-    border-radius: 10px;
-    height: 50px;
-    width: 50px;
-    font-size: 2.25rem;
+.blue-btn {
     font-family: 'Source Sans Pro', serif;
     font-weight: 900;
     color: white;
     background-color: #005567;
     border: none;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+.book-modal-btn {
+    border-radius: 10px;
+    height: 50px;
+    width: 50px;
+    font-size: 2.25rem;
     transition: border-radius 250ms;
 }
 
@@ -104,18 +107,78 @@ body {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    transition: all 200ms;
-    padding: 10px;
-    border: 1px solid black;
+    transform: translate(-50%, -50%) scale(0); /*temp*/
+    transition: all 0.5s;
+    border: 5px solid #4b4b4b;
+    border-radius: 10px;
     z-index: 10;
-    background-color: white;
+    background-color: rgba(22, 54, 56, 1);
     width: 500px;
+    height: 500px;
     max-width: 80%;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .book-modal.active {
     transform: translate(-50%, -50%) scale(1);
+}
+
+.book-modal-heading {
+    padding: 15px 0;
+    font-size: 3.5rem;
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+    color: #FFE3B9;
+    background-color: #005567;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+}
+
+.book-modal > form {
+    /* border: 1px solid black; */
+    color: #FFE3B9;
+
+    flex: 1;
+    gap: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+}
+
+.book-modal > form > div {
+    /* border: 1px solid black; */
+    font-size: 1.5rem;
+    width: 80%;
+}
+
+.book-modal > form > div > input {
+    padding: 5px 10px;
+    font-family: 'Source Sans Pro', serif;
+    font-size: 1.2rem;
+    width: 100%;
+    border-radius: 5px;
+    border: 2px solid #4b4b4b;
+}
+
+#new-book {
+    padding: 10px 15px;
+    margin-top: 2rem;;
+    font-size: 1.5rem;
+    transition: all 150ms;
+}
+
+#new-book:hover {
+    border-radius: 10px;
+}
+
+#new-book:active {
+    position: relative;
+    top: 2px;
 }
 
 .modal-overlay {
