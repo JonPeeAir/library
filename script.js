@@ -20,7 +20,7 @@ function Book(title, author, pages){
     this.title = title;
     this.author = author;
     this.pages = pages;
-    this.read = true;
+    this.read = false;
     this.key = newBookIndex;
     newBookIndex++;
 }
