@@ -83,16 +83,42 @@ function populateLibraryWithBooksFromLocalStorage() {
 
 function displayBookInLIbrary(book) {
 
-    let bookDiv = document.createElement("div");
+    let bookCardContainer = document.createElement("div");
+    bookCardContainer.classList.add("book-card-container");
 
-    let bookTitle = document.createElement("p");
-    bookTitle.textContent = book.title; 
+
+    let bookCard = document.createElement("div");
+    bookCard.classList.add("book-card");
+
+    let cardFront = document.createElement("figure");
+    cardFront.classList.add("front");
+    cardFront.textContent = book.title;
+
+    let cardBack = document.createElement("figure");
+    cardBack.classList.add("back");
+    let bookAuthorDiv = document.createElement("div");
+    bookAuthorDiv.classList.add("book-author")
+    let bookAuthorLabel = document.createElement("b");
+    bookAuthorLabel.textContent = "Author";
     let bookAuthor = document.createElement("p");
     bookAuthor.textContent = book.author;
-    let bookPages = document.createElement("p");
-    bookPages.textContent = book.pages;
+    bookAuthorDiv.append(bookAuthorLabel);
+    bookAuthorDiv.append(bookAuthor);
+    let pages = document.createElement("p");
+    pages.textContent = book.pages;
+    cardBack.append(bookAuthorDiv);
+    cardBack.append(pages);
 
-    // creating a read toggle switch
+    bookCard.append(cardFront);
+    bookCard.append(cardBack);
+
+    let bookMenu = document.createElement("div");
+    bookMenu.classList.add("book-menu");
+
+    let readToggleContainer = document.createElement("div");
+    readToggleContainer.classList.add("read-toggle");
+    readToggleContainer.textContent = "Read";
+
     let readToggle = document.createElement("label");
     readToggle.classList.add("switch");
 
@@ -122,9 +148,12 @@ function displayBookInLIbrary(book) {
     readToggle.append(readCheckbox);
     readToggle.append(readUI);
 
+    readToggleContainer.append(readToggle);
+
     // creating a remove button
     let removeButton = document.createElement("button");
-    removeButton.textContent = "REMOVE";
+    removeButton.classList.add("remove-btn");
+    removeButton.textContent = "Remove";
     removeButton.dataset.key = book.key;
     removeButton.onclick = () => {
         localStorage.removeItem(removeButton.dataset.key);
@@ -134,14 +163,25 @@ function displayBookInLIbrary(book) {
         refreshBooks();
     }
 
+    bookMenu.append(readToggleContainer);
+    bookMenu.append(removeButton);
 
-    bookDiv.append(bookTitle);
-    bookDiv.append(bookAuthor);
-    bookDiv.append(bookPages);
-    bookDiv.append(readToggle);
-    bookDiv.append(removeButton);
+    bookCardContainer.append(bookCard);
+    bookCardContainer.append(bookMenu);
 
-    library.append(bookDiv);
+    bookCardContainer.addEventListener("click", () => {
+        console.log(bookMenu.style.transform);
+        if (bookMenu.style.visibility === "hidden") {
+            bookMenu.style.visibility= "visible";
+            bookMenu.style.opacity = "1";
+        } else {
+            bookMenu.style.visibility= "hidden";
+            bookMenu.style.opacity = "0";
+        }
+
+    });
+
+    library.append(bookCardContainer);
 }
 
 function clearLibraryStorage() {
