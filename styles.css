@@ -66,8 +66,10 @@ body {
 }
 
 .book-card .back {
+    border: 1px solid black;
     background: #BFBFBF;
     transform: rotateY(180deg);
+    cursor: default;
 }
 
 .book-author {
@@ -76,6 +78,55 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.book-menu {
+    height: 100%;
+    width: 100%;
+    padding: 2rem;
+    border-radius: 20px;
+    background-color: #828282;
+    font-size: 2rem;
+    font-family: 'Source Sans Pro', serif;
+    font-weight: 900;
+    color: white;
+    position: relative;
+    z-index: 5;
+    top: -100%;
+    cursor: default;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+
+.read-toggle {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.remove-btn {
+    font: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    transition: color 0.10s;
+}
+
+.remove-btn:hover {
+    color: rgb(206, 57, 57);
 }
 
 
@@ -287,7 +338,7 @@ body {
     bottom: 0;
     background-color: #ccc;
     -webkit-transition: .4s;
-    transition: .4s;
+    transition: background-color .4s;
 }
   
 .slider:before {
@@ -299,7 +350,7 @@ body {
     bottom: 4px;
     background-color: white;
     -webkit-transition: .4s;
-    transition: .4s;
+    transition: transform .4s;
 }
   
 input:checked + .slider {
