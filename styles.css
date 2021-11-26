@@ -12,17 +12,22 @@ body {
 
 .title {
     padding: 15px 0;
+    width: 100vw;
     font-size: 3.5rem;
     font-family: 'Playfair Display', serif;
     text-align: center;
     color: #FFE3B9;
     background-color: #005567;
     border-radius: 0 0 50px 50px;
+    position: fixed;
+    top: 0;
+    z-index: 4;
 }
 
 .library {
     /* background-color: red; */
-    padding: 3rem;
+    padding: 5rem 3rem;
+    margin-top: 5rem;
 
     display: flex;
     flex-wrap: wrap;
@@ -134,7 +139,7 @@ body {
 .fab-container {
     /* border: 1px solid black; */
     position: fixed;
-    bottom: 50px;
+    bottom: 80px;
     right: 80px;
 
     display: flex;
@@ -153,7 +158,7 @@ body {
     color: black;
     opacity: 0;
     position: absolute;
-    top: 100px;
+    top: 900px;
     transition: color 75ms, background-color 75ms, opacity 0.5s;
 }
 
@@ -375,4 +380,46 @@ input:checked + .slider:before {
   
 .slider.round:before {
     border-radius: 50%;
+}
+
+footer {
+    background-color: #C4C4C4;
+    color: black;
+    font-size: 1.2rem;
+    font-family: 'Playfair Display', serif;
+    width: 100vw;
+    min-height: 50px;
+    margin-top: 1.5rem;
+    position: fixed;
+    bottom: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+footer > p {
+    font-family: inherit;
+    color: inherit;
+    flex: 1;
+    text-align: center;
+}
+
+footer > p > a {
+    font-family: inherit;
+    color: inherit;
+    text-decoration: none;
+}
+
+footer > a {
+    position: absolute;
+    right: 2rem;
+    transition: all 0.4s;
+
+    display: flex;
+    align-items: center;
+}
+
+footer > a:hover {
+    transform: rotateY(180deg);
 }
