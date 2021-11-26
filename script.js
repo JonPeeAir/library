@@ -14,16 +14,27 @@ bookModalButton.addEventListener("click", openBookModal);
 bookModalOverlay.addEventListener("click", closeBookModal);
 form.onsubmit = addBookToLibrary;
 
-let newBookIndex = localStorage.length;
-
-function Book(title, author, pages){
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = false;
-    this.key = newBookIndex;
-    newBookIndex++;
+const createBook = (title, author, pages) => {
+    return {
+        title, 
+        author, 
+        pages, 
+        read: false, 
+        key: generateBookKey() }
 }
+
+function generateBookKey() {
+    return findLargestKeyIn(localStorage) + 1 || localStorage.length;
+}
+
+function findLargestKeyIn(storageObj) {
+    let largest = Object.keys(storageObj)[0]; 
+    for (let i = 1; i < storageObj.length; i++) {
+        largest = Object.keys(storageObj)[i] > largest ? Object.keys(storageObj)[i] : largest;
+    }
+    return Number(largest);
+}
+
 
 function openBookModal() {
     bookModal.classList.add("active");
@@ -37,7 +48,7 @@ function closeBookModal() {
 
 
 function addBookToLibrary() {
-    let newBook = new Book(titleInput.value, authorInput.value, pagesInput.value);
+    let newBook = createBook(titleInput.value, authorInput.value, pagesInput.value);
 
     localStorage.setItem(newBook.key, JSON.stringify(newBook));
 
@@ -53,7 +64,7 @@ function addBookToLibrary() {
 }
 
 
-// This function is pretty inefficient. Imma change it soon
+// This function is pretty inefficient. Imma change it soon...I think
 function refreshBooks() {  
     removeBooksFrom(library);
     populateLibraryWithBooksFromLocalStorage();
@@ -82,18 +93,28 @@ function populateLibraryWithBooksFromLocalStorage() {
 }
 
 function displayBookInLIbrary(book) {
+    const bookCard = bookCardFactory(book);
+    library.append(bookCard);
+}
 
-    let bookCardContainer = document.createElement("div");
+const bookCardFactory = (bookObj) => {
+    // Main div that holds bookCardDesc and bookCardMenu
+    // -- This is the main html node we will be returning --
+    const bookCardContainer = document.createElement("div");
     bookCardContainer.classList.add("book-card-container");
 
+    
+    // Creating the book description...
+    // Div that holds the book description
+    let bookCardDesc = document.createElement("div");
+    bookCardDesc.classList.add("book-card");
 
-    let bookCard = document.createElement("div");
-    bookCard.classList.add("book-card");
-
+    // The front of the card holds the book title
     let cardFront = document.createElement("figure");
     cardFront.classList.add("front");
-    cardFront.textContent = book.title;
+    cardFront.textContent = bookObj.title;
 
+    // The back of the card holds the book author and no. of pages
     let cardBack = document.createElement("figure");
     cardBack.classList.add("back");
     let bookAuthorDiv = document.createElement("div");
@@ -101,31 +122,40 @@ function displayBookInLIbrary(book) {
     let bookAuthorLabel = document.createElement("b");
     bookAuthorLabel.textContent = "Author";
     let bookAuthor = document.createElement("p");
-    bookAuthor.textContent = book.author;
+    bookAuthor.textContent = bookObj.author;
     bookAuthorDiv.append(bookAuthorLabel);
     bookAuthorDiv.append(bookAuthor);
     let pages = document.createElement("p");
-    pages.textContent = book.pages;
+    pages.textContent = bookObj.pages;
     cardBack.append(bookAuthorDiv);
     cardBack.append(pages);
 
-    bookCard.append(cardFront);
-    bookCard.append(cardBack);
+    // Put the descriptions all together
+    bookCardDesc.append(cardFront);
+    bookCardDesc.append(cardBack);
 
+
+    // Creating the book menu...
+    // Div that holds the book menu
     let bookMenu = document.createElement("div");
     bookMenu.classList.add("book-menu");
 
+    // This div holds the toggle label and the toggle itself
     let readToggleContainer = document.createElement("div");
     readToggleContainer.classList.add("read-toggle");
+    // This is the toggle label
     readToggleContainer.textContent = "Read";
 
+    // Creating the read toggle...
+    // This is the div (label) that will hold the checkbox and toggle graphic that responds to the checkbox
     let readToggle = document.createElement("label");
     readToggle.classList.add("switch");
 
+    // This is the toggle checkbox
     let readCheckbox = document.createElement("input");
     readCheckbox.type = "checkbox";
-    readCheckbox.checked = book.read;
-    readCheckbox.dataset.key = book.key;
+    readCheckbox.checked = bookObj.read;
+    readCheckbox.dataset.key = bookObj.key;
     readCheckbox.addEventListener("change", () => {
         if (readCheckbox.checked) {
             console.log("this is checked");
@@ -142,19 +172,23 @@ function displayBookInLIbrary(book) {
         }
 
     });
+
+    // This is the toggle graphic
     let readUI = document.createElement("span");
     readUI.classList.add("slider", "round");
 
+    // Put the checkbox and graphic all together
     readToggle.append(readCheckbox);
     readToggle.append(readUI);
 
+    // Add the toggle below its label
     readToggleContainer.append(readToggle);
 
     // creating a remove button
     let removeButton = document.createElement("button");
     removeButton.classList.add("remove-btn");
     removeButton.textContent = "Remove";
-    removeButton.dataset.key = book.key;
+    removeButton.dataset.key = bookObj.key;
     removeButton.onclick = () => {
         localStorage.removeItem(removeButton.dataset.key);
         if (localStorage.length === 0) {
@@ -163,12 +197,15 @@ function displayBookInLIbrary(book) {
         refreshBooks();
     }
 
+    // Put the read toggle and remove button in the menu div
     bookMenu.append(readToggleContainer);
     bookMenu.append(removeButton);
 
-    bookCardContainer.append(bookCard);
+    // Now add the description and menu to the book card container
+    bookCardContainer.append(bookCardDesc);
     bookCardContainer.append(bookMenu);
 
+    // Now whenever we click on the card, the menu shows up and disappear when we click it again
     bookCardContainer.addEventListener("click", () => {
         console.log(bookMenu.style.transform);
         if (bookMenu.style.visibility === "hidden") {
@@ -181,7 +218,8 @@ function displayBookInLIbrary(book) {
 
     });
 
-    library.append(bookCardContainer);
+    // return a fully customized html node for a book object
+    return bookCardContainer;
 }
 
 function clearLibraryStorage() {
