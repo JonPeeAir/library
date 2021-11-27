@@ -14,6 +14,16 @@ bookModalButton.addEventListener("click", openBookModal);
 bookModalOverlay.addEventListener("click", closeBookModal);
 form.onsubmit = addBookToLibrary;
 
+function openBookModal() {
+    bookModal.classList.add("active");
+    bookModalOverlay.classList.add("active");
+}
+
+function closeBookModal() {
+    bookModal.classList.remove("active");
+    bookModalOverlay.classList.remove("active");
+}
+
 const createBook = (title, author, pages) => {
     return {
         title, 
@@ -35,21 +45,8 @@ function findLargestKeyIn(storageObj) {
     return Number(largest);
 }
 
-
-function openBookModal() {
-    bookModal.classList.add("active");
-    bookModalOverlay.classList.add("active");
-}
-
-function closeBookModal() {
-    bookModal.classList.remove("active");
-    bookModalOverlay.classList.remove("active");
-}
-
-
 function addBookToLibrary() {
-    let newBook = createBook(titleInput.value, authorInput.value, pagesInput.value);
-
+    const newBook = createBook(titleInput.value, authorInput.value, pagesInput.value);
     localStorage.setItem(newBook.key, JSON.stringify(newBook));
 
     titleInput.value = "";
@@ -63,14 +60,12 @@ function addBookToLibrary() {
     return false;
 }
 
-
-// This function is pretty inefficient. Imma change it soon...I think
 function refreshBooks() {  
-    removeBooksFrom(library);
+    clearBooksFrom(library);
     populateLibraryWithBooksFromLocalStorage();
 }
 
-function removeBooksFrom(library) {
+function clearBooksFrom(library) {
     while (library.firstChild) {
         library.removeChild(library.firstChild);
     }
@@ -93,138 +88,173 @@ function populateLibraryWithBooksFromLocalStorage() {
 }
 
 function displayBookInLIbrary(book) {
-    const bookCard = bookCardFactory(book);
+    const bookCard = createBookCardFrom(book);
     library.append(bookCard);
 }
 
-const bookCardFactory = (bookObj) => {
-    // Main div that holds bookCardDesc and bookCardMenu
-    // -- This is the main html node we will be returning --
-    const bookCardContainer = document.createElement("div");
-    bookCardContainer.classList.add("book-card-container");
+const createBookCardFrom = (bookObj) => {
 
-    
-    // Creating the book description...
-    // Div that holds the book description
-    let bookCardDesc = document.createElement("div");
-    bookCardDesc.classList.add("book-card");
+    function createBookCardDescription() {
 
-    // The front of the card holds the book title
-    let cardFront = document.createElement("figure");
-    cardFront.classList.add("front");
-    cardFront.textContent = bookObj.title;
+        function createFrontCardDescription() {
+            const frontCard = document.createElement("figure");
+            frontCard.classList.add("front");
+            frontCard.textContent = bookObj.title;
 
-    // The back of the card holds the book author and no. of pages
-    let cardBack = document.createElement("figure");
-    cardBack.classList.add("back");
-    let bookAuthorDiv = document.createElement("div");
-    bookAuthorDiv.classList.add("book-author")
-    let bookAuthorLabel = document.createElement("b");
-    bookAuthorLabel.textContent = "Author";
-    let bookAuthor = document.createElement("p");
-    bookAuthor.textContent = bookObj.author;
-    bookAuthorDiv.append(bookAuthorLabel);
-    bookAuthorDiv.append(bookAuthor);
-    let pages = document.createElement("p");
-    pages.textContent = bookObj.pages;
-    cardBack.append(bookAuthorDiv);
-    cardBack.append(pages);
-
-    // Put the descriptions all together
-    bookCardDesc.append(cardFront);
-    bookCardDesc.append(cardBack);
-
-
-    // Creating the book menu...
-    // Div that holds the book menu
-    let bookMenu = document.createElement("div");
-    bookMenu.classList.add("book-menu");
-
-    // This div holds the toggle label and the toggle itself
-    let readToggleContainer = document.createElement("div");
-    readToggleContainer.classList.add("read-toggle");
-    // This is the toggle label
-    readToggleContainer.textContent = "Read";
-
-    // Creating the read toggle...
-    // This is the div (label) that will hold the checkbox and toggle graphic that responds to the checkbox
-    let readToggle = document.createElement("label");
-    readToggle.classList.add("switch");
-
-    // This is the toggle checkbox
-    let readCheckbox = document.createElement("input");
-    readCheckbox.type = "checkbox";
-    readCheckbox.checked = bookObj.read;
-    readCheckbox.dataset.key = bookObj.key;
-    readCheckbox.addEventListener("change", () => {
-        if (readCheckbox.checked) {
-            console.log("this is checked");
-            let bookJSON = localStorage.getItem(readCheckbox.dataset.key);
-            let book = JSON.parse(bookJSON);
-            book.read = true;
-            localStorage.setItem(readCheckbox.dataset.key, JSON.stringify(book));
-        } else {
-            console.log("this is not checked");
-            let bookJSON = localStorage.getItem(readCheckbox.dataset.key);
-            let book = JSON.parse(bookJSON);
-            book.read = false;
-            localStorage.setItem(readCheckbox.dataset.key, JSON.stringify(book));
+            return frontCard;
         }
 
-    });
+        function createBackCardDescription() {
 
-    // This is the toggle graphic
-    let readUI = document.createElement("span");
-    readUI.classList.add("slider", "round");
+            const bookAuthorLabel = document.createElement("b");
+            bookAuthorLabel.textContent = "Author";
+            const bookAuthor = document.createElement("p");
+            bookAuthor.textContent = bookObj.author;
 
-    // Put the checkbox and graphic all together
-    readToggle.append(readCheckbox);
-    readToggle.append(readUI);
+            const bookPagesLabel= document.createElement("b");
+            bookPagesLabel.textContent = "Pages";
+            const bookPages= document.createElement("p");
+            bookPages.textContent = bookObj.pages;
 
-    // Add the toggle below its label
-    readToggleContainer.append(readToggle);
+            const bookDescriptionDiv = document.createElement("div");
+            bookDescriptionDiv.classList.add("book-description")
+            bookDescriptionDiv.append(bookAuthorLabel);
+            bookDescriptionDiv.append(bookAuthor);
+            bookDescriptionDiv.append(bookPagesLabel);
+            bookDescriptionDiv.append(bookPages);
 
-    // creating a remove button
-    let removeButton = document.createElement("button");
-    removeButton.classList.add("remove-btn");
-    removeButton.textContent = "Remove";
-    removeButton.dataset.key = bookObj.key;
-    removeButton.onclick = () => {
-        localStorage.removeItem(removeButton.dataset.key);
-        if (localStorage.length === 0) {
-            newBookIndex = 0;
+            const readStatus = document.createElement("p");
+            readStatus.textContent = bookObj.read ? "Already read it" : "Haven't read it";
+
+            const backCard = document.createElement("figure");
+            backCard.classList.add("back");
+            backCard.append(bookDescriptionDiv);
+            backCard.append(readStatus);
+
+            return backCard;
         }
-        refreshBooks();
+        
+        const frontCard = createFrontCardDescription();
+        const backCard = createBackCardDescription();
+
+        const bookCardDesc = document.createElement("div");
+        bookCardDesc.classList.add("book-card");
+        bookCardDesc.append(frontCard);
+        bookCardDesc.append(backCard);
+
+        return bookCardDesc;
     }
 
-    // Put the read toggle and remove button in the menu div
-    bookMenu.append(readToggleContainer);
-    bookMenu.append(removeButton);
+    function createBookCardMenu () {
 
-    // Now add the description and menu to the book card container
-    bookCardContainer.append(bookCardDesc);
+        function createReadToggleWithLabel() {
+
+            function createReadToggle() {
+
+                function createCheckbox() {
+
+                    function toggleBookReadStatus() {
+                        const bookJSON = localStorage.getItem(this.dataset.key);
+                        const book = JSON.parse(bookJSON);
+                        book.read = this.checked ? true : false;
+                        localStorage.setItem(this.dataset.key, JSON.stringify(book));
+
+                        const bookCardContainer = this.parentElement.parentElement.parentElement.parentElement;
+                        const bookCard = bookCardContainer.firstChild;
+                        const backCard = bookCard.childNodes[1];
+                        const readStatus = backCard.childNodes[1];
+                        readStatus.textContent = book.read ? "Already read it" : "Haven't read it";
+                    }
+                    
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.checked = bookObj.read;
+                    checkbox.dataset.key = bookObj.key;
+                    checkbox.addEventListener("change", toggleBookReadStatus);
+
+                    return checkbox;
+                }
+
+                function createUserInterface() {
+                    const userInterface = document.createElement("span");
+                    userInterface.classList.add("slider", "round");
+
+                    return userInterface;
+                }
+
+                const readCheckbox = createCheckbox();
+                const readUI = createUserInterface();
+
+                const readToggle = document.createElement("label");
+                readToggle.classList.add("switch");
+                readToggle.append(readCheckbox);
+                readToggle.append(readUI);
+
+                return readToggle;
+            }
+
+            const readToggle = createReadToggle();
+
+            const readToggleWithLabel= document.createElement("div");
+            readToggleWithLabel.classList.add("read-toggle");
+            readToggleWithLabel.textContent = "Read";
+            readToggleWithLabel.append(readToggle);
+
+            return readToggleWithLabel;
+        }
+
+        function createRemoveButton() {
+
+            function removeBook() {
+                localStorage.removeItem(this.dataset.key);
+                refreshBooks();
+            }
+
+            const removeButton = document.createElement("button");
+            removeButton.classList.add("remove-btn");
+            removeButton.textContent = "Remove";
+            removeButton.dataset.key = bookObj.key;
+            removeButton.onclick = removeBook;
+
+            return removeButton;
+        }
+
+        const readToggle = createReadToggleWithLabel();
+        const removeButton = createRemoveButton();
+
+        const bookMenu = document.createElement("div");
+        bookMenu.classList.add("book-menu");
+        bookMenu.append(readToggle);
+        bookMenu.append(removeButton);
+
+        return bookMenu;
+    }
+
+    const bookDescription= createBookCardDescription();
+    const bookMenu = createBookCardMenu();
+
+    const bookCardContainer = document.createElement("div");
+    bookCardContainer.classList.add("book-card-container");
+    bookCardContainer.append(bookDescription);
     bookCardContainer.append(bookMenu);
 
-    // Now whenever we click on the card, the menu shows up and disappear when we click it again
-    bookCardContainer.addEventListener("click", () => {
-        console.log(bookMenu.style.transform);
-        if (bookMenu.style.visibility === "hidden") {
+    function toggleBookMenu() {
+        if (bookMenu.style.visibility === "hidden" || bookMenu.style.visibility === "") {
             bookMenu.style.visibility= "visible";
             bookMenu.style.opacity = "1";
         } else {
             bookMenu.style.visibility= "hidden";
             bookMenu.style.opacity = "0";
         }
+    }
 
-    });
+    bookCardContainer.addEventListener("click", toggleBookMenu);
 
-    // return a fully customized html node for a book object
     return bookCardContainer;
 }
 
 function clearLibraryStorage() {
     localStorage.clear();
-    newBookIndex = 0;
     refreshBooks();
 }
 
